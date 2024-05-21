@@ -1,6 +1,7 @@
 DROP DATABASE IF EXISTS BMCompany;
 CREATE DATABASE BMCompany;
 
+\c BMCompany;
 
 CREATE TABLE Department (
 id Serial primary key,
@@ -19,7 +20,9 @@ CREATE TABLE Employee (
 id SERIAL primary key,
 first_name VARCHAR(30) not null,
 last_name VARCHAR(30) not null,
-foreign key (Role),
+role_id INT not null,
+foreign key (role_id)
 references Role(id),
-foreign key (Employee),
+manager_id INT,
+foreign key (manager_id)
 references Employee(id));

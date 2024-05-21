@@ -1,7 +1,6 @@
 const inquirer = require('inquirer');
-//can I use sequelize for this project?
 
-const initialEntry = inquirer.prompt([
+const initialEntry = () => {inquirer.prompt([
         { type: 'list',
           message: 'What would you like to do?',
           choices: ['View All Departments', 'View All Roles','View All Employees', 'Add Department', 
@@ -18,10 +17,11 @@ const initialEntry = inquirer.prompt([
                 viewRoles();
                 break;
         }
-    })
+    })};
 
     function viewDepartments(){
-
+        Pool.query
+      //create new prompt method inquirer.prompt
     }
 
     function viewRoles(){

@@ -10,15 +10,15 @@ SELECT * from role;
 SELECT * from employee;
 
 -- create (add) to department table
-INSERT INTO department(id, name)
+INSERT INTO department(name)
 VALUE(`${entry.id}, ${entry.name}`);
 
 -- create (add) to roles table
-INSERT INTO role(id, title, salary, department_id)
+INSERT INTO role(title, salary, department_id)
 VALUE('');
 
 -- create (add) to employee table
-INSERT INTO employee(id, first_name, last_name, role_id, manager_id)
+INSERT INTO employee(first_name, last_name, role_id, manager_id)
 VALUE('');
 
 -- update to employee (role column)
