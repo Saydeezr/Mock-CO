@@ -1,5 +1,5 @@
 const inquirer = require('inquirer');
-
+//can I use sequelize for this project?
 
 const initialEntry = inquirer.prompt([
         { type: 'list',
@@ -13,6 +13,17 @@ const initialEntry = inquirer.prompt([
         switch(initialEntry.options){
             case 'View All Departments':
                 viewDepartments();
-                break
+                break;
+            case 'View All Roles':
+                viewRoles();
+                break;
         }
     })
+
+    function viewDepartments(){
+
+    }
+
+    function viewRoles(){
+
+    }
