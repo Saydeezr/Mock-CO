@@ -1,11 +1,25 @@
 DROP DATABASE IF EXISTS BMCompany;
 CREATE DATABASE BMCompany;
 
---Queries needed
--- read departments table
--- read roles table
--- read employee table
--- create (add) to department table
--- create (add) to roles table
--- create (add) to employee table
--- update to employee (role column)
+
+CREATE TABLE Department (
+id Serial primary key,
+name VARCHAR(30) unique not null);
+
+
+CREATE TABLE Role (
+id SERIAL primary key,
+title VARCHAR(30) unique not null,
+salary DECIMAL not null,
+foreign key (Department),
+references Department(id));
+
+
+CREATE TABLE Employee (
+id SERIAL primary key,
+first_name VARCHAR(30) not null,
+last_name VARCHAR(30) not null,
+foreign key (Role),
+references Role(id),
+foreign key (Employee),
+references Employee(id));
