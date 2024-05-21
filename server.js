@@ -12,9 +12,13 @@ const initialEntry = inquirer.prompt([
           message: 'What would you like to do?',
           choices: ['View All Departments', 'View All Roles','View All Employees', 'Add Department', 
                     'Add A Role', 'Add An Employee', 'Update An Employee Role'],
-          name: 'action'
+          name: 'initial request'
         }
-    ]) 
+    ]) //add if stament?
     .then(initialEntry => {
 
     })
+
+app.listen(PORT, () => { 
+    console.log('listening on port')
+});
