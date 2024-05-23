@@ -1,18 +1,25 @@
 const inquirer = require('inquirer');
 const { Pool } = require('pg');
 
-// Do I have to create a new pool class here?
+const pool = new Pool({
+    host: 'localhost',
+    user: 'postgres',
+    password: 'Obedience',
+    database: 'bcompany'
+});
+
+pool.connect();
 
 const initialEntry = () => {inquirer.prompt([
         { type: 'list',
           message: 'What would you like to do?',
           choices: ['View All Departments', 'View All Roles','View All Employees', 'Add Department', 
                     'Add A Role', 'Add An Employee', 'Update An Employee Role'],
-          name: 'initial request'
+          name: 'initialRequest'
         }
     ]) 
     .then(initialEntry => {
-        switch(initialEntry.options){
+        switch(initialEntry.initialRequest){
             case 'View All Departments':
                 viewDepartments();
                 break;
@@ -37,21 +44,8 @@ const initialEntry = () => {inquirer.prompt([
         }
     })};
 
-
-   //any way to combine or make shorter?
-    function viewDepartments(){
-        const query = `SELECT * from Department`
-
-        Pool.query(query, (err, result) => {
-            if(err) {
-                console.error(err)
-            } else {
-                console.log(result)
-                continuePath(); 
-            } 
-        })
-    };
-     function continuePath() {
+//Function that brings user to initial prompt if want to continue
+ function continuePath() {
         inquirer
         .prompt([
         {
@@ -65,18 +59,46 @@ const initialEntry = () => {inquirer.prompt([
     })
 };
 
+//uses SQL to view different databases
+ function viewDepartments(){
+        const sql = `SELECT * from department`
 
-    function viewRoles(){
-        const query = `SELECT * from Role;`
-    }
+        pool.query(sql, (err, result) => {
+            if(err) {
+                console.error(err)
+            } else {
+                console.table(result.rows)
+                continuePath(); 
+            } 
+        });
+    };
 
-    function viewEmployees(){
-        const query = `SELECT * from Employee;`
-    }
+ function viewRoles(){
+        const sql = `SELECT * from Role;`
+        pool.query(sql, (err,result) => {
+            if(err) {
+                console.error(err)
+            } else { console.table(result.rows)
+                continuePath();
+            }
+        });
+    };
 
+ function viewEmployees(){
+        const sql = `SELECT * from Employee;`
+        pool.query(sql, (err, result) => {
+            if(err) {
+                console.error(err)
+            } else {
+                console.table(result.rows)
+                continuePath();
+            }
+        });
+    };
 
-    function addDepartment(){
-        const query = `INSERT INTO department (name) VALUE('');`
+//uses SQL query to add to databases 
+ function addDepartment(){
+        const sql = `INSERT INTO department (name) VALUE('');`
 
         inquirer
           .prompt([
@@ -90,11 +112,12 @@ const initialEntry = () => {inquirer.prompt([
             if(!answer){ 
                 console.error('Name is required')
             } else {
-                Pool.query(query, answer.name, (err, result) => {
+                Pool.query(sql, answer.name, (err, result) => {
                     if(err) {
                      console.error(err)
                     } else {
                      console.log(result)
+                     continuePath();
                 } 
               });
             } 
@@ -102,18 +125,20 @@ const initialEntry = () => {inquirer.prompt([
     };
         
    
-
-
-    function addRole(){
+  function addRole(){
         const query = `INSERT INTO Role(title, salary) 
                        VALUE('');`
     }
 
-    function addEmployee(){
+ function addEmployee(){
         const query = `INSERT INTO Employee(first_name, last_name, //add role and manager id?//) 
                        VALUE('');`
     }
 
-    function updateEmployee(){
+
+//use SQL to update employee database
+ function updateEmployee(){
         const query = `UPDATE role set title =''and salary ='' and department ='' WHERE id ='';`
     }
+
+initialEntry();
