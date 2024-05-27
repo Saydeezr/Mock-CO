@@ -5,7 +5,7 @@ CREATE DATABASE bcompany;
 
 CREATE TABLE Department (
 id Serial primary key,
-name VARCHAR(30) unique not null);
+name VARCHAR(30) not null);
 
 
 CREATE TABLE Role (
@@ -27,5 +27,4 @@ foreign key (role_id)
 references Role(id),
 manager_id INT,
 foreign key (manager_id)
-references Employee(id)
-ON DELETE SET NULL);
+references Employee(id) ON UPDATE CASCADE);
