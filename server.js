@@ -127,7 +127,13 @@ const initialEntry = () => {inquirer.prompt([
     };
         
    
-  function addRole(){
+  async function addRole(){
+    const { rows } = await pool.query('SELECT * FROM department;')
+    const departmentChoices = rows.map(({id, name}) => ({
+        name: name,
+        value: id
+    })) 
+    console.log(departmentChoices)
     inquirer
     .prompt([
       {
@@ -139,30 +145,60 @@ const initialEntry = () => {inquirer.prompt([
         type: 'input',
         message: 'What is the salary of the new role?',
         name: 'salary'
+      },
+      {
+        type: 'list',
+        message: 'Which department will this role fall under?',
+        choices: departmentChoices,
+        name: 'department'
       }
     ]) 
     .then((answer) => {
+        console.log(answer)
       if(!answer.name){ 
           console.error('Name of role is required')
           return;
       } 
       
-      const sql = `INSERT INTO role(title, salary) VALUES ($1, $2);`
-{
-      pool.query(sql, [answer.name, answer.salary], (err, result) => {
+      const sql = `INSERT INTO role(title, salary, department_id) VALUES ($1, $2, $3);`
+
+      pool.query(sql, [answer.name, answer.salary, answer.department], (err, result) => {
           if(err) {
               console.error(err)
           } else {
-              console.log('Role Added!')
+              console.log('Role added to the database!')
               continuePath();
           } 
         });  
-      } 
     })
 };
        
 
- function addEmployee(){
+ async function addEmployee(){
+    const { rows } = await pool.query('SELECT * FROM role;')
+    const roleChoices = rows.map(({id, name}) => ({
+        name: name, 
+        value: id
+    }))
+    console.log(roleChoices);
+    inquirer
+    .prompt([
+      {
+          type: 'input',
+          message: 'What is the first name of the employee?',
+          name: 'firstName'
+      },
+      {
+        type: 'input',
+        message: 'What is the last name of the employee?',
+        name: 'lastName'
+      },
+      {
+        type: 'input',
+        message: 'What is the role id number?',
+        name: 'roleID'
+      }
+    ]) 
         const query = `INSERT INTO Employee(first_name, last_name, //add role and manager id?//) 
                        VALUES('');`
     }
@@ -170,6 +206,20 @@ const initialEntry = () => {inquirer.prompt([
 
 //use SQL to update employee database
  function updateEmployee(){
+    inquirer
+    .prompt([
+      {
+          type: 'input',
+          message: 'What employee would you like to update?',
+          name: 'name'
+      },
+      {
+        type: 'input',
+        message: 'What is the new role of this updated employee?',
+        name: 'role'
+      }
+    ])
+    .then()
         const query = `UPDATE role set title =''and salary ='' and department ='' WHERE id ='';`
     }
 

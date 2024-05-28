@@ -1,5 +1,5 @@
 DROP DATABASE IF EXISTS bcompany;
-CREATE DATABASE bcompany;
+CREATE DATABASE bcompany;   
 
 \c bcompany
 

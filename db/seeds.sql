@@ -14,12 +14,14 @@ VALUES
     ('Lead Engineer', '195000', '1');
 
 
+SELECT * FROM role LEFT JOIN department on role.department_id = department.id left join employee on employee.role_id = role.id;
+
 INSERT INTO employee(first_name, last_name, role_id, manager_id)
 VALUES 
-    ('Sam', 'Crunik', 1, NULL);
-    ('ELizabeth', 'Martin', 2, '201'),
-    ('Antony', 'Giapolis', 3, '301'),
-    ('Rachel', 'Ross', 4, '205');
+    ('Sam', 'Crunik', 1, NULL)
+    ('ELizabeth', 'Martin', 2, '1'),
+    ('Antony', 'Giapolis', 3, NULL),
+    ('Rachel', 'Ross', 4, '1');
 
 
 
