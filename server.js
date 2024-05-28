@@ -55,7 +55,7 @@ const initialEntry = () => {inquirer.prompt([
         }
     ])
     .then((answer) => {
-        answer.continue ? initialEntry : console.log('Done')
+        answer.continue ? initialEntry() : process.exit();
     })
 };
 
@@ -98,8 +98,6 @@ const initialEntry = () => {inquirer.prompt([
 
 //uses SQL query to add to databases 
  function addDepartment(){
-        const sql = `INSERT INTO department (name) VALUE('');`
-
         inquirer
           .prompt([
             {
@@ -109,30 +107,64 @@ const initialEntry = () => {inquirer.prompt([
             }
           ]) 
           .then((answer) => {
-            if(!answer){ 
-                console.error('Name is required')
-            } else {
-                Pool.query(sql, answer.name, (err, result) => {
-                    if(err) {
-                     console.error(err)
-                    } else {
-                     console.log(result)
-                     continuePath();
+            if(!answer.name){ 
+                console.error('Name of department is required')
+                return;
+            } 
+            
+            const sql = `INSERT INTO department (name) VALUES($1);`
+{
+            pool.query(sql, [answer.name], (err, result) => {
+                if(err) {
+                    console.error(err)
+                } else {
+                    console.log('Department Added!')
+                    continuePath();
                 } 
-              });
+              });  
             } 
           })
     };
         
    
   function addRole(){
-        const query = `INSERT INTO Role(title, salary) 
-                       VALUE('');`
-    }
+    inquirer
+    .prompt([
+      {
+          type: 'input',
+          message: 'What is the name of the new role?',
+          name: 'name'
+      },
+      {
+        type: 'input',
+        message: 'What is the salary of the new role?',
+        name: 'salary'
+      }
+    ]) 
+    .then((answer) => {
+      if(!answer.name){ 
+          console.error('Name of role is required')
+          return;
+      } 
+      
+      const sql = `INSERT INTO role(title, salary) VALUES ($1, $2);`
+{
+      pool.query(sql, [answer.name, answer.salary], (err, result) => {
+          if(err) {
+              console.error(err)
+          } else {
+              console.log('Role Added!')
+              continuePath();
+          } 
+        });  
+      } 
+    })
+};
+       
 
  function addEmployee(){
         const query = `INSERT INTO Employee(first_name, last_name, //add role and manager id?//) 
-                       VALUE('');`
+                       VALUES('');`
     }
 
 
