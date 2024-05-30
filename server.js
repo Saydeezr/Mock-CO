@@ -174,13 +174,13 @@ const initialEntry = () => {inquirer.prompt([
        
 
  async function addEmployee(){
-    const { rows: roles } = await pool.query('SELECT * FROM role;')
-    const { rows: manager } = await pool.query('SELECT * FROM employee')
+    const { rows } = await pool.query('SELECT * FROM role;')
+    const { row } = await pool.query('SELECT * FROM employee')
     const roleChoices = rows.map((role) => ({
         name: role.name, 
         value: role.id
     }))
-    const managerChoices = rows.map((manager) => ({ 
+    const managerChoices = row.map((manager) => ({ 
         value: manager.id
     }))
     inquirer
