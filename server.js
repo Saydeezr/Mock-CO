@@ -133,7 +133,6 @@ const initialEntry = () => {inquirer.prompt([
         name: name,
         value: id
     })) 
-    console.log(departmentChoices)
     inquirer
     .prompt([
       {
@@ -180,7 +179,6 @@ const initialEntry = () => {inquirer.prompt([
         name: name, 
         value: id
     }))
-    console.log(roleChoices);
     inquirer
     .prompt([
       {
@@ -194,13 +192,29 @@ const initialEntry = () => {inquirer.prompt([
         name: 'lastName'
       },
       {
-        type: 'input',
+        type: 'list',
         message: 'What is the role id number?',
+        choices: roleChoices,
         name: 'roleID'
       }
     ]) 
-        const query = `INSERT INTO Employee(first_name, last_name, //add role and manager id?//) 
-                       VALUES('');`
+    .then((answer) => {
+        console.log(answer)
+        if (!answer.firstName || !answer.lastName || !answer.roleID){
+            console.error('All fields are required.')
+            return;
+        } 
+    })
+        const query = `INSERT INTO Employee(first_name, last_name, role_id, manager_id) 
+                       VALUES($1, $2, $3, $4);`
+
+        pool.query(sql, [answer.firstName, answer.lastName, answer.roleID], (err, result) => {
+            if(err){
+                console.error(err)
+            } else {
+                console.log('Employee added!')
+            }
+        })
     }
 
 
