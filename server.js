@@ -159,9 +159,9 @@ const initialEntry = () => {inquirer.prompt([
           return;
       } 
       
-      const sql = `INSERT INTO role(title, salary, department_id) VALUES ($1, $2, $3);`
+      const query = `INSERT INTO role(title, salary, department_id) VALUES ($1, $2, $3);`
 
-      pool.query(sql, [answer.name, answer.salary, answer.department], (err, result) => {
+      pool.query(query, [answer.name, answer.salary, answer.department], (err, result) => {
           if(err) {
               console.error(err)
           } else {
@@ -174,13 +174,17 @@ const initialEntry = () => {inquirer.prompt([
        
 
  async function addEmployee(){
-    const { rows } = await pool.query('SELECT * FROM role;')
-    const roleChoices = rows.map(({id, name}) => ({
-        name: name, 
-        value: id
+    const { rows: roles } = await pool.query('SELECT * FROM role;')
+    const { rows: manager } = await pool.query('SELECT * FROM employee')
+    const roleChoices = rows.map((role) => ({
+        name: role.name, 
+        value: role.id
+    }))
+    const managerChoices = rows.map((manager) => ({ 
+        value: manager.id
     }))
     inquirer
-    .prompt([
+     .prompt([
       {
           type: 'input',
           message: 'What is the first name of the employee?',
@@ -193,29 +197,35 @@ const initialEntry = () => {inquirer.prompt([
       },
       {
         type: 'list',
-        message: 'What is the role id number?',
+        message: 'Choose a role:',
         choices: roleChoices,
-        name: 'roleID'
+        name: 'role'
+      },
+      {
+        type: 'list',
+        message: 'Choose a manager:',
+        choices: managerChoices,
+        name: 'manager'
       }
     ]) 
     .then((answer) => {
-        console.log(answer)
-        if (!answer.firstName || !answer.lastName || !answer.roleID){
+        if (!answer.firstName || !answer.lastName || !answer.role){
             console.error('All fields are required.')
             return;
         } 
-    })
-        const query = `INSERT INTO Employee(first_name, last_name, role_id, manager_id) 
+    
+        const sql = `INSERT INTO Employee(first_name, last_name, role_id, manager_id) 
                        VALUES($1, $2, $3, $4);`
 
-        pool.query(sql, [answer.firstName, answer.lastName, answer.roleID], (err, result) => {
+        pool.query(sql, [answer.firstName, answer.lastName, answer.role, answer.manager], (err, result) => {
             if(err){
                 console.error(err)
             } else {
                 console.log('Employee added!')
             }
         })
-    }
+        continuePath();
+    })}
 
 
 //use SQL to update employee database
