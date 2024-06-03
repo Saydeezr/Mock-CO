@@ -35,7 +35,7 @@ const initialEntry = () => {inquirer.prompt([
             case "Add A Role":
                 addRole();
                 break;
-            case 'Add an Employee':
+            case 'Add An Employee':
                 addEmployee();
                 break;
             case 'Update An Employee Role':
@@ -174,13 +174,13 @@ const initialEntry = () => {inquirer.prompt([
        
 
  async function addEmployee(){
-    const { rows } = await pool.query('SELECT * FROM role;')
-    const { row } = await pool.query('SELECT * FROM employee')
-    const roleChoices = rows.map((role) => ({
+    const { rows: role } = await pool.query('SELECT * FROM role;')
+    const { rows: manager } = await pool.query('SELECT * FROM employee')
+    const roleChoices = role.map((role) => ({
         name: role.name, 
         value: role.id
     }))
-    const managerChoices = row.map((manager) => ({ 
+    const managerChoices = manager.map((manager) => ({ 
         value: manager.id
     }))
     inquirer
@@ -229,22 +229,43 @@ const initialEntry = () => {inquirer.prompt([
 
 
 //use SQL to update employee database
- function updateEmployee(){
+ async function updateEmployee(employeeId, roleId){
+    const { rows: roles } = await pool.query(`SELECT * FROM role;`)
+    const { rows: employees } = await pool.query(`SELECT * FROM employee;`)
+    const roleChoices = roles.map(({id, title}) => ({ 
+        name: title, 
+        value: id,
+ }))
+    const employeeChoices= employees.map(({ first_name, last_name, id}) => ({
+        name: `${first_name} ${last_name}`,
+        value: id,
+    }));
+
     inquirer
-    .prompt([
+     .prompt([
       {
-          type: 'input',
+          type: 'list',
           message: 'What employee would you like to update?',
-          name: 'name'
+          choices: employeeChoices,
+          name: 'employee'
       },
       {
-        type: 'input',
+        type: 'list',
         message: 'What is the new role of this updated employee?',
+        choices: roleChoices,
         name: 'role'
-      }
-    ])
-    .then()
-        const query = `UPDATE role set title =''and salary ='' and department ='' WHERE id ='';`
-    }
+      },
+    ]) 
+    .then((answer) => {
+        const query = `UPDATE employee set role_id=$1 WHERE id =$2;`
+        pool.query(query, [answer.role, answer.employee], (err, result) => {
+            if (err){ 
+                console.error(err);
+            } else {
+                console.log('Employee updated!')
+            }
+        })
+        continuePath();
+    })};   
 
 initialEntry();
