@@ -7,3 +7,4 @@ They will also have access to make updates to employees and their roles as neede
 ## Installation
 A command line interface used to navigate the program will be required. Node.Js and PostgresPsql were used in this project.
 
+![image](https://github.com/Saydeezr/Mock-CO/assets/157931019/65a301a2-dcb8-479b-a298-ec1c12d81aa4)
